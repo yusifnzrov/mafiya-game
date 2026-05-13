@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mafia Online - Ultimate Edition</title>
-    <!-- Firebase SDK -->
+    <title>Mafia Online - Pro Edition</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
@@ -12,8 +11,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
         :root {
-            --red: #ff3131; --bg: #050505; --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1); --gold: #ffbd13;
+            --red: #800000; --red-bright: #ff3131; --bg: #050505; 
+            --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); --gold: #ffbd13;
         }
 
         body, html {
@@ -21,70 +20,70 @@
             color: #fff; font-family: 'Poppins', sans-serif; overflow: hidden;
         }
 
+        /* Arxa fon animasiyası */
+        .orb {
+            position: fixed; width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--red) 0%, transparent 70%);
+            filter: blur(100px); border-radius: 50%; opacity: 0.4;
+            z-index: -1; animation: moveOrb 12s infinite alternate ease-in-out;
+        }
+        @keyframes moveOrb {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(50%, 60%); }
+        }
+
         .app-container {
             width: 100%; max-width: 450px; height: 100vh; margin: 0 auto;
-            background: radial-gradient(circle at top, #1a0000 0%, #050505 100%);
-            display: flex; flex-direction: column; border: 1px solid var(--border);
+            display: flex; flex-direction: column; border-right: 1px solid var(--border); border-left: 1px solid var(--border);
+            position: relative; z-index: 10;
         }
 
-        /* --- Auth Screen --- */
-        #auth-screen {
-            flex: 1; display: flex; flex-direction: column; justify-content: center;
-            padding: 40px; text-align: center;
-        }
-
-        h1 { font-family: 'Cinzel', serif; font-size: 40px; color: var(--red); letter-spacing: 5px; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255,49,49,0.5); }
+        /* --- Login --- */
+        #auth-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px; }
+        h1 { font-family: 'Cinzel', serif; font-size: 45px; color: var(--red-bright); text-align: center; margin-bottom: 40px; text-shadow: 0 0 15px rgba(255,0,0,0.5); }
 
         input {
-            width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border); border-radius: 15px; color: #fff; outline: none;
-            box-sizing: border-box; font-size: 16px;
+            width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); border-radius: 12px; color: #fff; font-size: 16px; outline: none;
         }
-
-        input:focus { border-color: var(--red); }
+        input:focus { border-color: var(--red-bright); }
 
         .btn-main {
-            width: 100%; padding: 16px; background: var(--red); color: white;
-            border: none; border-radius: 15px; font-weight: bold; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+            width: 100%; padding: 16px; background: var(--red); color: white; border: none;
+            border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
+        .btn-main:hover { background: var(--red-bright); }
 
-        .btn-main:active { transform: scale(0.95); }
-
-        /* --- Game Screen --- */
+        /* --- Game --- */
         #game-screen { display: none; flex-direction: column; height: 100%; }
-
         header {
-            padding: 15px 20px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            padding: 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
         }
 
-        #chat-view {
-            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px;
-        }
-
-        .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 14px; animation: slideUp 0.3s ease; }
+        #chat-view { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 10px 15px; border-radius: 15px; max-width: 85%; font-size: 14px; line-height: 1.4; }
         .msg.me { align-self: flex-end; background: var(--red); border-bottom-right-radius: 2px; }
         .msg.other { align-self: flex-start; background: var(--glass); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
-        .msg.sys { align-self: center; color: var(--gold); font-size: 11px; text-align: center; background: none; }
+        .msg.sys { align-self: center; color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .footer { padding: 20px; background: rgba(10,10,10,0.95); border-top: 1px solid var(--border); }
-
-        .hidden { display: none !important; }
+        .footer { padding: 15px; background: #0a0a0a; border-top: 1px solid var(--border); display: flex; gap: 10px; }
         
+        /* --- Overlay --- */
         #role-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; display: flex;
-            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.98);
+            z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center;
         }
+        .role-title { font-family: 'Cinzel'; font-size: 50px; margin: 20px 0; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+<div class="orb"></div>
+
 <div class="app-container">
-    <!-- Giriş Bölməsi -->
     <div id="auth-screen">
         <h1>MAFIA</h1>
         <input type="text" id="uname" placeholder="Adınız">
@@ -92,126 +91,112 @@
         <button class="btn-main" onclick="joinOrCreateRoom()">Otağa Daxil Ol</button>
     </div>
 
-    <!-- Oyun Bölməsi -->
     <div id="game-screen">
         <header>
             <div>
-                <div id="p-role" style="color: var(--gold); font-weight: bold;">ROL: Gözlənilir</div>
-                <div id="p-room-display" style="font-size: 11px; opacity: 0.6;">Otaq: #----</div>
+                <div id="p-role" style="font-weight: 600; font-size: 14px;">ROL: Gözlənilir...</div>
+                <div id="p-room-display" style="font-size: 10px; color: #888;"></div>
             </div>
-            <button id="admin-start-btn" class="hidden" style="background: var(--gold); border: none; padding: 5px 10px; border-radius: 5px; font-weight: bold; cursor: pointer;" onclick="startGame()">Oyunu Başlat</button>
+            <button id="admin-start-btn" class="hidden" style="background: var(--gold); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold;" onclick="startGame()">Oyunu Başlat</button>
         </header>
 
         <div id="chat-view"></div>
 
         <div class="footer">
-            <input type="text" id="chat-input" placeholder="Mesaj yazın..." onkeypress="if(event.key==='Enter') sendChat()">
+            <input type="text" id="chat-input" placeholder="Mesaj..." style="margin-bottom:0" onkeypress="if(event.key==='Enter') sendChat()">
         </div>
     </div>
 </div>
 
-<!-- Rol Animasiyası -->
-<div id="role-overlay" class="hidden">
-    <p style="font-size: 18px; letter-spacing: 2px;">SƏNİN ROLUN</p>
-    <h2 id="role-text" style="font-size: 45px; margin: 10px 0; font-family: 'Cinzel';">MAFİYA</h2>
-    <button class="btn-main" style="width: 150px; margin-top: 20px;" onclick="document.getElementById('role-overlay').classList.add('hidden')">Anladım</button>
+<div id="role-overlay">
+    <p style="letter-spacing: 5px; color: #888;">SƏNİN ROLUN</p>
+    <div id="role-text" class="role-title">MAFİYA</div>
+    <button class="btn-main" style="width: 200px" onclick="closeOverlay()">ANLADIM</button>
 </div>
 
 <script>
-    // --- VACİB: BURANI ÖZ FİREBASE MƏLUMATLARINLA DOLDUR ---
+    // FİREBASE KONFİQURASİYANIZI BURA ƏLAVƏ EDİN
     const firebaseConfig = {
-        apiKey: "SƏNİN_API_KEY",
-        databaseURL: "SƏNİN_DATABASE_URL",
-        projectId: "SƏNİN_ID",
-        appId: "SƏNİN_APP_ID"
+        apiKey: "YOUR_API_KEY",
+        databaseURL: "YOUR_DATABASE_URL",
+        projectId: "YOUR_PROJECT_ID",
+        appId: "YOUR_APP_ID"
     };
-    // ------------------------------------------------------
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let mySession = { id: "u" + Date.now(), name: "", room: "", isAdmin: false };
+    let mySession = { id: "u" + Math.floor(Math.random()*100000), name: "", room: "", isAdmin: false };
+    let roleShown = false;
 
     function joinOrCreateRoom() {
         mySession.name = document.getElementById('uname').value.trim();
         mySession.room = document.getElementById('uroom').value.trim();
 
-        if(!mySession.name || !mySession.room) return alert("Boş buraxma!");
+        if(!mySession.name || !mySession.room) return alert("Məlumatları doldurun!");
 
         const roomRef = db.ref('rooms/' + mySession.room);
 
-        roomRef.once('value').then((snapshot) => {
-            const data = snapshot.val();
-            
-            // Otaq yoxdursa, yaradan şəxs Admin olur
-            if (!data) {
-                roomRef.set({
-                    admin: mySession.id,
-                    status: "waiting",
-                    createdAt: Date.now()
-                });
+        roomRef.once('value').then(snap => {
+            const data = snap.val();
+            if(!data) {
+                roomRef.set({ admin: mySession.id, status: "waiting", messages: {} });
                 mySession.isAdmin = true;
             } else {
-                if (data.admin === mySession.id) mySession.isAdmin = true;
+                if(data.admin === mySession.id) mySession.isAdmin = true;
             }
 
-            // Oyunçunu əlavə et
             roomRef.child('players/' + mySession.id).set({
                 name: mySession.name,
                 role: "Vətəndaş",
                 alive: true
             });
 
-            enterGameUI();
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            document.getElementById('p-room-display').innerText = "Otaq: #" + mySession.room;
+            
             listenToRoom();
         });
-    }
-
-    function enterGameUI() {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'flex';
-        document.getElementById('p-room-display').innerText = "Otaq: #" + mySession.room;
     }
 
     function listenToRoom() {
         const roomRef = db.ref('rooms/' + mySession.room);
 
-        // Mesajları dinlə
-        roomRef.child('messages').on('child_added', (snap) => {
+        // Mesajları izlə
+        roomRef.child('messages').on('child_added', snap => {
             const m = snap.val();
             const div = document.createElement('div');
             div.className = `msg ${m.uid === mySession.id ? 'me' : (m.uid === 'sys' ? 'sys' : 'other')}`;
-            div.innerHTML = m.uid === 'sys' ? m.text : `<b>${m.user}:</b><br>${m.text}`;
+            div.innerHTML = m.uid === 'sys' ? m.text : `<b>${m.user}</b><br>${m.text}`;
             const view = document.getElementById('chat-view');
             view.appendChild(div);
             view.scrollTop = view.scrollHeight;
         });
 
-        // Otaq vəziyyətini dinlə
-        roomRef.on('value', (snap) => {
+        // Status və Rolları izlə
+        roomRef.on('value', snap => {
             const data = snap.val();
             if(!data) return;
 
-            // Admin yoxlanışı
-            if (data.admin === mySession.id && data.status === "waiting") {
+            // Admin düyməsi
+            if(mySession.isAdmin && data.status === "waiting") {
                 document.getElementById('admin-start-btn').classList.remove('hidden');
             } else {
                 document.getElementById('admin-start-btn').classList.add('hidden');
             }
 
-            // Rol yoxlanışı
-            if (data.status === "active") {
+            // Oyun başlayanda rolun göstərilməsi
+            if(data.status === "active" && data.players[mySession.id]) {
                 const myRole = data.players[mySession.id].role;
                 document.getElementById('p-role').innerText = "ROL: " + myRole;
-                document.getElementById('p-role').style.color = myRole === "MAFİYA" ? "var(--red)" : "var(--gold)";
+                document.getElementById('p-role').style.color = (myRole === "MAFİYA") ? "var(--red-bright)" : "var(--gold)";
+                
+                if(!roleShown) {
+                    showRoleOverlay(myRole);
+                    roleShown = true;
+                }
             }
-        });
-        
-        // Oyun başlayanda bildiriş
-        roomRef.child('status').on('change', (snap) => {
-           if(snap.val() === "active") {
-               // Rol ekranını göstər (Opsional)
-           }
         });
     }
 
@@ -228,25 +213,27 @@
 
     function startGame() {
         const roomRef = db.ref('rooms/' + mySession.room);
-        roomRef.child('players').once('value', (snap) => {
+        roomRef.child('players').once('value', snap => {
             const players = snap.val();
             const ids = Object.keys(players);
-            if(ids.length < 3) return alert("Ən az 3 oyunçu lazımdır!");
+            if(ids.length < 3) return alert("Minimum 3 oyunçu lazımdır!");
 
-            const mafiaId = ids[Math.floor(Math.random() * ids.length)];
-            
-            ids.forEach(id => {
-                roomRef.child('players/' + id).update({
-                    role: id === mafiaId ? "MAFİYA" : "VƏTƏNDAŞ"
-                });
+            // Rolların paylanması (Daha professional məntiq)
+            let roles = [];
+            roles.push("MAFİYA");
+            if(ids.length >= 4) roles.push("KOMİSAR");
+            if(ids.length >= 5) roles.push("HƏKİM");
+            while(roles.length < ids.length) roles.push("VƏTƏNDAŞ");
+
+            // Rolları qarışdır
+            roles.sort(() => Math.random() - 0.5);
+
+            ids.forEach((id, index) => {
+                roomRef.child('players/' + id).update({ role: roles[index] });
             });
 
             roomRef.update({ status: "active" });
-            roomRef.child('messages').push({ uid: "sys", text: "--- OYUN BAŞLADI! ---" });
-            
-            // Rol ekranını hər kəsdə açmaq üçün
-            const role = ids.indexOf(mySession.id) === ids.indexOf(mafiaId) ? "MAFİYA" : "VƏTƏNDAŞ";
-            showRoleOverlay(role);
+            roomRef.child('messages').push({ uid: "sys", text: "--- OYUN BAŞLADI ---" });
         });
     }
 
@@ -254,8 +241,12 @@
         const overlay = document.getElementById('role-overlay');
         const text = document.getElementById('role-text');
         text.innerText = role;
-        text.style.color = role === "MAFİYA" ? "var(--red)" : "#00ff00";
-        overlay.classList.remove('hidden');
+        text.style.color = (role === "MAFİYA") ? "var(--red-bright)" : (role === "VƏTƏNDAŞ" ? "#00ff00" : "var(--gold)");
+        overlay.style.display = "flex";
+    }
+
+    function closeOverlay() {
+        document.getElementById('role-overlay').style.display = "none";
     }
 </script>
 </body>
